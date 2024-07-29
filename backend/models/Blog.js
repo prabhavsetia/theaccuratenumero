@@ -2,25 +2,37 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-// Define a schema for a Blog model with fields for title, subtitle, description, and date
+// Define a schema for a Blog model with the necessary fields
 const BlogSchema = new Schema({
+    author: {
+        type: String,       
+        required: true
+    },
     title: {
-        type: String,        // The title field is a string and is required
-        require: true
+        type: String,       
+        required: true
     },
-    subtitle: {
-        type: String,        // The subtitle field is a string with a default value of "General"
-        default: "General"
+    content: {
+        type: String,       
+        required: true
     },
-    description: {
-        type: String,        // The description field is a string and is required
-        require: true,
+    summary: {
+        type: String,       
+        required: true
     },
     date: {
-        type: Date,          // The date field is a date object with a default value of the current date
+        type: Date,         
         default: Date.now
+    },
+    status: {
+        type: String,        
+        default: "draft"
+    },
+    category: {
+        type: String,       
+        default: "General"
     },
 });
 
 // Export the Blog model, making it available for use in other parts of the application
-module.exports = mongoose.model('blog', BlogSchema);
+module.exports = mongoose.model('Blog', BlogSchema);

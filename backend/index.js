@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
 
 // Routes for authentication and blog functionalities
 app.use('/api/auth', require('./routs/auth'));
-app.use('/api/blog', require('./routs/blog'));
+app.use('/api/blogs', require('./routs/blog'));
 
 // Start the server and listen on the specified port
 app.listen(port, () => {
