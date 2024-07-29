@@ -81,7 +81,7 @@ router.put('/editblog/:id', fetchuser, [
         blog = await Blog.findByIdAndUpdate(req.params.id, { $set: editedBlog }, { new: true });
         res.json(blog);
     } catch (error) {
-        console.error('Error fetching blogs:', error.message); // Log any error
+        console.error('Error editing blogs:', error.message); // Log any error
         res.status(500).send("Internal Server Error Occurred");
     }
 })
@@ -100,7 +100,7 @@ router.delete('/deleteblog/:id', fetchuser, async (req, res) => {
         blog = await Blog.findByIdAndDelete(req.params.id);
         res.status(200).send("Blog deleted successfully");
     } catch (error) {
-        console.error('Error fetching blogs:', error.message); // Log any error
+        console.error('Error deleting blogs:', error.message); // Log any error
         res.status(500).send("Internal Server Error Occurred");
     }
 })
