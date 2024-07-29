@@ -4,6 +4,10 @@ const { Schema } = mongoose;
 
 // Define a schema for a Blog model with the necessary fields
 const BlogSchema = new Schema({
+    user:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'user'
+    },
     author: {
         type: String,       
         required: true

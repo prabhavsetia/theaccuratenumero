@@ -109,7 +109,7 @@ router.post('/getuser', fetchuser, async (req, res) => {
         // Find user by ID and exclude the password field
         const user = await User.findById(userId).select("-password");
         if (!user) {
-            return res.status(404).send({ error: "User not found" });
+            return res.status(404).json({ error: "User not found" });
         }
         // Return user details
         res.send(user);

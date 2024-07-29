@@ -22,6 +22,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', require('./routs/auth'));
 app.use('/api/blogs', require('./routs/blog'));
 app.use('/api/services', require('./routs/services'));
+app.use('/api/contacts', require('./routs/contact'));
 
 // Start the server and listen on the specified port
 app.listen(port, () => {

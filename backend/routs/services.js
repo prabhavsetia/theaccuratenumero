@@ -27,17 +27,19 @@ router.post('/addservice', fetchuser, [
     body('price', 'Field cannot be empty').exists(),
 ],
     async (req, res) => {
+        let success = false;
         try {
             const { service, description, p1, p2, p3, p4, p5, p6, price } = req.body
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
-                return res.status(400).json({ errors: errors.array() });
+                return res.status(400).json({ success, errors: errors.array() });
             }
             const services = new Services({
-                service, description, p1, p2, p3, p4, p5, p6, price
+                service, description, p1, p2, p3, p4, p5, p6, price, user: req.user.id
             })
             const savedServices = await services.save();
-            res.json(savedServices)
+            success = true;
+            res.json({ success, savedServices })
         } catch (error) {
             console.error('Error fetching blogs:', error.message); // Log any error
             res.status(500).send("Internal Server Error Occurred");
@@ -56,11 +58,12 @@ router.put('/updateservice/:id', fetchuser, [
     body('price', 'Price must be a number and cannot be empty').isNumeric().exists(),
 ],
     async (req, res) => {
+        let success = false;
         try {
             const { service, description, p1, p2, p3, p4, p5, p6, price } = req.body
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
-                return res.status(400).json({ errors: errors.array() });
+                return res.status(400).json({ success, errors: errors.array() });
             }
             const editedService = {};
             if (service) { editedService.service = service }
@@ -75,10 +78,11 @@ router.put('/updateservice/:id', fetchuser, [
 
             let services = await Services.findById(req.params.id);
             if (!services) {
-                res.status(500).send("Service not found");
+                res.status(500).json({ success, error: "Service not found" });
             }
             services = await Services.findByIdAndUpdate(req.params.id, { $set: editedService }, { new: true })
-            res.json(services);
+            success = true;
+            res.json({ success, services: services });
         } catch (error) {
             console.error('Error fetching blogs:', error.message); // Log any error
             res.status(500).send("Internal Server Error Occurred");
@@ -88,17 +92,19 @@ router.put('/updateservice/:id', fetchuser, [
 // Route 5 :Delete a service for everyone: Delete "/api/services/deleteservice". login Required
 router.delete('/deleteservice/:id', fetchuser, async (req, res) => {
     try {
+        let success = false;
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            return res.status(400).json({ success, errors: errors.array() });
         }
         let service = await Services.findById(req.params.id);
         if (!service) {
-            return res.status(404).send("Service not found");
+            return res.status(404).json({ success, error: "Service not found" });
         }
 
         service = await Services.findByIdAndDelete(req.params.id);
-        res.status(200).send("Service deleted successfully");
+        success = true;
+        res.status(200).json({ success, message: "Service deleted successfully" });
     } catch (error) {
         console.error('Error deleting Service:', error.message); // Log any error
         res.status(500).send("Internal Server Error Occurred");

@@ -1,8 +1,12 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-// Define User schema with name, email, password, and date fields
+// Define User schema with name, description, p1-p6, price and date fields
 const ServicesSchema = new Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user'
+    },
     name: {
         type: String,
         require: true,

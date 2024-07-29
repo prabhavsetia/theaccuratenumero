@@ -21,47 +21,51 @@ router.post('/addingcontact', [
     body('phone', 'phone Cannot be empty').exists().isNumeric(),
     body('message')
 ], async (req, res) => {
+    let success = false;
     try {
         const { name, email, phone, message } = req.body;
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            return res.status(400).json({ success, errors: errors.array() });
         }
         const contacts = new Contact({
             name, email, phone, message
         })
-        const savedContact = await contacts.save()
-        res.send(savedContact);
+        const savedContact = await contacts.save();
+        success = true;
+        res.json({ success, contact: savedContact });
     } catch (error) {
         console.error('Error fetching contacts:', error.message); // Log any error
         res.status(500).send("Internal Server Error Occurred");
     }
 })
 // Route 3 :Edit a contact info : PUT "/api/contacts/editcontact". login Required
-router.put('/editcontact/:id', fetchuser,[
+router.put('/editcontact/:id', fetchuser, [
     body('name', 'Name Cannot be empty').exists(),
     body('email', 'enter a valid email').exists().isEmail(),
     body('phone', 'phone Cannot be empty').exists().isString(),
     body('message')
 ], async (req, res) => {
+    let success = false;
     try {
         const { name, email, phone, message } = req.body;
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            return res.status(400).json({ success, errors: errors.array() });
         }
         const editedContact = {}
-        if(name){editedContact.name = name}
-        if(email){editedContact.email = email}
-        if(phone){editedContact.phone = phone}
-        if(message){editedContact.message = message}
+        if (name) { editedContact.name = name }
+        if (email) { editedContact.email = email }
+        if (phone) { editedContact.phone = phone }
+        if (message) { editedContact.message = message }
 
         const contact = await Contact.findById(req.params.id)
-        if(!contact){
-            return res.status(404).send("Contact not found");
+        if (!contact) {
+            return res.status(404).json({ success, error: "Contact not found" });
         }
-        const saveEditedContact = await Contact.findByIdAndUpdate(req.params.id, {$set:editedContact},{new:true});
-        res.send(saveEditedContact);
+        const saveEditedContact = await Contact.findByIdAndUpdate(req.params.id, { $set: editedContact }, { new: true });
+        success = true;
+        res.json({ success, contact: saveEditedContact });
     } catch (error) {
         console.error('Error fetching contacts:', error.message); // Log any error
         res.status(500).send("Internal Server Error Occurred");
@@ -69,17 +73,19 @@ router.put('/editcontact/:id', fetchuser,[
 })
 // Route 4 :Delete a contact info : PUT "/api/contacts/deletecontact". login Required
 router.delete('/deletecontact/:id', async (req, res) => {
+    let success = false;
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            return res.status(400).json({ success, errors: errors.array() });
         }
         const contact = await Contact.findById(req.params.id)
-        if(!contact){
-            return res.status(404).send("Contact not found");
+        if (!contact) {
+            return res.status(404).json({ success, error: "Contact not found" });
         }
         const deleteEditedContact = await Contact.findByIdAndDelete(req.params.id);
-        res.send("Contact deleted successfully");
+        success = true;
+        res.json({ success, message: "Contact deleted successfully" });
     } catch (error) {
         console.error('Error fetching contacts:', error.message); // Log any error
         res.status(500).send("Internal Server Error Occurred");
