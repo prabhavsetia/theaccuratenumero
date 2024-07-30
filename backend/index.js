@@ -1,5 +1,6 @@
 const connectToMongo = require('./db');
 const express = require('express');
+var cors = require('cors')
 
 // Load environment variables from .env file
 require('dotenv').config();
@@ -10,6 +11,7 @@ connectToMongo();
 const app = express();
 const port = 3000;
 
+app.use(cors())
 // Middleware to parse JSON bodies
 app.use(express.json());
 

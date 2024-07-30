@@ -14,6 +14,7 @@ router.post('/createuser', [
     body('name', 'Enter a valid name').exists(),
     body('email', 'Enter a valid email').isEmail(),
     body('password', 'Password must be at least 8 characters').isLength({ min: 8 }),
+    body('confirmpassword', 'Password must be at least 8 characters').isLength({ min: 8 }),
     body('key', 'Enter a valid name').exists()],
     async (req, res) => {
         let success = false;
@@ -24,7 +25,10 @@ router.post('/createuser', [
                 return res.send({ success, errors: result.array() });
             }
             // Get the token from the request body 
-            const { key } = req.body;
+            const { key, password, confirmpassword } = req.body;
+            if (password !== confirmpassword) {
+                return res.status(401).send({ error: "password and confirmpassword are not same" });
+            }
             if (!key) {
                 // If no token is provided, send an unauthorized response
                 return res.status(401).send({ error: "Please authenticate using a valid Key" });
