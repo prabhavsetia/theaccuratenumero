@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const fetchuser = require('../middleware/fetchuser');
+const cookieParser = require('cookie-parser');
 const JWT_Secret = process.env.JWT_Secret;
 const LOGIN_Key = process.env.LOGIN_Key;
 
@@ -68,6 +69,7 @@ router.post('/createuser', [
         }
     });
 
+const webCookie =    express().use(cookieParser()); 
 // Route 2: Authenticate a user using POST "/api/auth/login". No login required
 router.post('/login', [
     // Validate email and password
@@ -96,6 +98,13 @@ router.post('/login', [
         const data = { user: { id: user.id } };
         // Sign the JWT with the payload and secret
         const authtoken = jwt.sign(data, JWT_Secret);
+
+        res.cookie('webtoken', authtoken, {
+            httpOnly: true,  // Prevents JavaScript from accessing the cookie
+            secure: process.env.NODE_ENV === 'production',  // Ensures the cookie is sent over HTTPS
+            maxAge: 7 * 24 * 60 * 60 * 1000  // 7 days in milliseconds
+        });
+
         success = true;
         // Return the authentication token
         res.json({ success, authtoken });
