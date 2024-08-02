@@ -16,7 +16,7 @@ router.get('/fetchallservices', async (req, res) => {
 })
 // Route 2 :Add a service : POST "/api/services/addservice". No login Required
 router.post('/addservice', fetchuser, [
-    body('service', 'Field cannot be empty').exists(),
+    body('servicename', 'Field cannot be empty').exists(),
     body('description', 'Field cannot be empty').exists(),
     body('p1', 'Point number1'),
     body('p2', 'Point number2'),
@@ -29,13 +29,13 @@ router.post('/addservice', fetchuser, [
     async (req, res) => {
         let success = false;
         try {
-            const { service, description, p1, p2, p3, p4, p5, p6, price } = req.body
+            const { servicename, description, p1, p2, p3, p4, p5, p6, price } = req.body
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
                 return res.status(400).json({ success, errors: errors.array() });
             }
             const services = new Services({
-                service, description, p1, p2, p3, p4, p5, p6, price, user: req.user.id
+                servicename, description, p1, p2, p3, p4, p5, p6, price, user: req.user.id
             })
             const savedServices = await services.save();
             success = true;
@@ -47,7 +47,7 @@ router.post('/addservice', fetchuser, [
     })
 // Route 3 :Update a service : PUT "/api/services/updateservice". No login Required
 router.put('/updateservice/:id', fetchuser, [
-    body('service', 'Field cannot be empty').exists(),
+    body('servicename', 'Field cannot be empty').exists(),
     body('description', 'Field cannot be empty').exists(),
     body('p1', 'Point number1').optional(),
     body('p2', 'Point number2').optional(),
@@ -60,13 +60,13 @@ router.put('/updateservice/:id', fetchuser, [
     async (req, res) => {
         let success = false;
         try {
-            const { service, description, p1, p2, p3, p4, p5, p6, price } = req.body
+            const { servicename, description, p1, p2, p3, p4, p5, p6, price } = req.body
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
                 return res.status(400).json({ success, errors: errors.array() });
             }
             const editedService = {};
-            if (service) { editedService.service = service }
+            if (servicename) { editedService.servicename = servicename }
             if (description) { editedService.description = description }
             if (p1) { editedService.p1 = p1 }
             if (p2) { editedService.p2 = p2 }

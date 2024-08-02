@@ -3,11 +3,7 @@ const { Schema } = mongoose;
 
 // Define User schema with name, description, p1-p6, price and date fields
 const ServicesSchema = new Schema({
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'user'
-    },
-    name: {
+    servicename: {
         type: String,
         require: true,
     },
