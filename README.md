@@ -1,4 +1,4 @@
-# TheAccurateNumero
+# TheAccurateNumero 
 
 Welcome to TheAccurateNumero, an astronomy website where you can explore the wonders of the universe through blogs, learn about our services, and get in touch with us. This website also includes an admin panel for managing blog content.
 
