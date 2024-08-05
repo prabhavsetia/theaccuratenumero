@@ -26,6 +26,7 @@ router.get('/getreviews', async (req, res) => {
 // Route 2: Add a Review using POST "/api/auth/addreview". Login required
 router.post('/addreview', fetchuser, [
     body('servicename', 'Field cannot be empty'),
+    body('stars', 'Min-1 and max-5').isInt({ min: 1, max: 5 }),
     body('message', 'Please enter comments').exists(),],
     async (req, res) => {
         let success = false;
@@ -35,7 +36,7 @@ router.post('/addreview', fetchuser, [
             if (!result.isEmpty()) {
                 return res.send({ success, errors: result.array() });
             }
-            const { servicename, message } = req.body
+            const { servicename, message, stars } = req.body
             const userId = req.user.id;
             if (userId) {
                 const user = await User.findById(userId);
@@ -52,6 +53,7 @@ router.post('/addreview', fetchuser, [
                 name: username,
                 email: useremail,
                 servicename: servicename,
+                stars: stars,
                 message: message,
                 user: User.name ? User._id : null
             })
@@ -66,6 +68,7 @@ router.post('/addreview', fetchuser, [
 // Route 2: Edit a Review using PUT "/api/auth/editreview".Login required
 router.put('/editreview/:id', fetchuser, [
     body('servicename', 'Field cannot be empty'),
+    body('stars', 'Min-1 and max-5').isInt({ min: 1, max: 5 }),
     body('message', 'Please enter comments').exists(),],
     async (req, res) => {
         let success = false;
@@ -76,7 +79,7 @@ router.put('/editreview/:id', fetchuser, [
             return res.send({ success, errors: result.array() });
         }
         try {
-            const { servicename, message } = req.body;
+            const { servicename, message, stars } = req.body;
             const userId = req.user.id;
 
             let user = await User.findById(userId);
@@ -93,6 +96,7 @@ router.put('/editreview/:id', fetchuser, [
                 name: user.name,
                 email: user.email,
                 message: message,
+                stars: stars,
                 servicename: servicename
             };
 

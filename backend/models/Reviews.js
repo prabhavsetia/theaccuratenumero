@@ -6,9 +6,20 @@ const ReviewSchema = new Schema({
     type: String,
     required: true
   },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
   email: {
     type: String,
     required: true
+  },
+  servicename: {
+    type: Schema.Types.String,
+    ref: 'Services'
+  },
+  stars:{
+    type: Number,
   },
   message: {
     type: String,
@@ -17,14 +28,7 @@ const ReviewSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User'
-  },
-  servicename: {
-    type: Schema.Types.String,
-    ref: 'Services'
-  },
+
 
 });
 
